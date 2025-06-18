@@ -4,11 +4,11 @@ from textblob import TextBlob
 import re
 
 def score_segment(text, keywords):
-    # Convert text to lowercase for case-insensitive matching
+    
     lower_text = text.lower()
     
     keyword_base_score = 0 # Will be a very large number if any keyword is found
-    keyword_occurrence_count = 0 # Counts total occurrences of keywords
+    keyword_occurrence_count = 0 
 
     if keywords:
         has_any_keyword = False
@@ -17,9 +17,9 @@ def score_segment(text, keywords):
                 has_any_keyword = True
                 keyword_occurrence_count += lower_text.count(kw.lower()) # Count occurrences
         if has_any_keyword:
-            keyword_base_score = 1_000_000 # Give a huge advantage if any keyword is present
+            keyword_base_score = 1_000_000 
     
-    # Sentiment score: use polarity (range -1 to 1)
+    # Sentiment score: polarity (range -1 to 1)
     sentiment_polarity = TextBlob(text).sentiment.polarity
     
     # Combine scores: prioritize keywords heavily. If no keywords, rely solely on sentiment.

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Topics & Keywords</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .container { max-width: 700px; margin: auto; }
+        .topic { margin-bottom: 1em; padding: 1em; border: 1px solid #ccc; border-radius: 6px; }
+        .topic label { font-weight: bold; }
+        .summary { background: #f8f8f8; padding: 1em; border-radius: 6px; margin-bottom: 2em; }
+        button { margin-top: 2em; padding: 0.7em 2em; font-size: 1em; }
+        .custom-keywords { margin-top: 1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Select Topics & Keywords</h2>
+    <div class="summary">
+        <strong>LLM Summary:</strong>
+        <p>{{ llm_suggestions['summary'] }}</p>
+    </div>
+    <form action="/finalize" method="post">
+        <input type="hidden" name="input_path" value="{{ input_path }}">
+        <input type="hidden" name="youtube_url" value="{{ youtube_url }}">
+        <input type="hidden" name="whisper_model" value="{{ whisper_model }}">
+        <input type="hidden" name="min_length" value="{{ min_length }}">
+        <input type="hidden" name="max_length" value="{{ max_length }}">
+        <div><strong>Select a topic to use for keyword selection:</strong></div>
+        {% for topic in llm_suggestions['key_topics'] %}
+        <div class="topic">
+            <label>
+                <input type="radio" name="topic_idx" value="{{ loop.index0 }}" {% if loop.first %}checked{% endif %}>
+                {{ topic['theme'] }}
+            </label>
+            <div>Keywords: {{ ', '.join(topic['keywords']) }}</div>
+        </div>
+        {% endfor %}
+        <div class="custom-keywords">
+            <label for="custom_keywords">Or enter custom keywords (comma-separated):</label>
+            <input type="text" id="custom_keywords" name="custom_keywords" style="width:100%;" placeholder="e.g. highlight, guest, story">
+            <div style="font-size:0.9em; color:#888;">If you enter custom keywords, they will be used instead of the selected topic above.</div>
+        </div>
+        <button type="submit">Generate Reel</button>
+    </form>
+</div>
+</body>
+</html> 

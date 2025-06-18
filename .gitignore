@@ -4,6 +4,7 @@ output/
 Transcript/
 temp_pipeline_files/
 Artifacts/
+temp/
 
 
 # --- Python-specific exclusions ---

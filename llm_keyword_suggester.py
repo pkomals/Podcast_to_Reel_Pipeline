@@ -4,7 +4,7 @@ import json
 from dotenv import load_dotenv
 
 def get_llm_suggestions(transcript_text):
-    load_dotenv() # Load environment variables from .env file
+    load_dotenv() 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("OPENAI_API_KEY environment variable not set.")
@@ -26,7 +26,7 @@ def get_llm_suggestions(transcript_text):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo-0125", # Or gpt-4-turbo for higher quality/cost
+            model="gpt-3.5-turbo-0125", 
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message}
@@ -37,7 +37,7 @@ def get_llm_suggestions(transcript_text):
         llm_output = response.choices[0].message.content
         suggestions = json.loads(llm_output)
         
-        # Basic validation of the expected JSON structure
+        
         if not isinstance(suggestions, dict) or 'summary' not in suggestions or 'key_topics' not in suggestions:
             raise ValueError("LLM did not return expected JSON format.")
         
@@ -55,8 +55,8 @@ def get_llm_suggestions(transcript_text):
         return None
 
 if __name__ == "__main__":
-    # Example usage for testing
-    # Set OPENAI_API_KEY environment variable before running
+    
+    # Set your own OPENAI_API_KEY environment variable before running
     sample_transcript = """
     Today we talked about the challenges in education, specifically how poverty impacts student learning. 
     We also discussed new employment opportunities emerging from the green energy sector and how retraining 

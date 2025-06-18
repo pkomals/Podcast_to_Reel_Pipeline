@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reel Generated!</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .container { max-width: 700px; margin: auto; }
+        .section { margin-bottom: 2em; }
+        .download-link { font-size: 1.2em; font-weight: bold; }
+        .keywords { color: #333; margin-bottom: 1em; }
+        .clip-range { color: #666; font-size: 0.95em; }
+        .action-buttons { margin-top: 2em; display: flex; gap: 2em; }
+        .action-buttons a, .action-buttons form button { padding: 0.7em 2em; font-size: 1em; text-decoration: none; border: none; border-radius: 4px; background: #007bff; color: #fff; cursor: pointer; }
+        .action-buttons a:hover, .action-buttons form button:hover { background: #0056b3; }
+        .clear-section { margin-top: 2em; }
+        .clear-section form button { background: #dc3545; }
+        .clear-section form button:hover { background: #a71d2a; }
+        .success-msg { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Reel Generation Complete!</h2>
+    <div class="section keywords">
+        <strong>Selected Keywords:</strong> {{ selected_keywords }}
+    </div>
+    <div class="section clip-range">
+        <strong>Clip Time Range:</strong> {{ '%.2f' % clip_start }}s &ndash; {{ '%.2f' % clip_end }}s
+    </div>
+    {% if error %}
+    <div class="section" style="color:red; font-weight:bold;">Error: {{ error }}</div>
+    {% endif %}
+    <div class="section">
+        {% if download_url %}
+        <a class="download-link" href="{{ download_url }}">Download Your Reel</a>
+        {% else %}
+        <span style="color:red;">No output file available.</span>
+        {% endif %}
+    </div>
+    <div class="action-buttons">
+        <a href="/">Start with New Video</a>
+        <form action="/select_keywords" method="post" style="display:inline;">
+            <input type="hidden" name="youtube_url" value="{{ youtube_url }}">
+            <input type="hidden" name="whisper_model" value="{{ whisper_model }}">
+            <input type="hidden" name="min_length" value="{{ min_length }}">
+            <input type="hidden" name="max_length" value="{{ max_length }}">
+            <button type="submit">Generate Another Reel from This Video</button>
+        </form>
+    </div>
+    <div class="clear-section">
+        <form action="/clear_temp" method="post">
+            <button type="submit">Clear Temp Files</button>
+        </form>
+        {% if clear_success %}
+        <div class="success-msg">Temp files cleared successfully.</div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html> 

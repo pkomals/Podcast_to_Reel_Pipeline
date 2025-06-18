@@ -9,11 +9,11 @@ from load_media import extract_audio
 from transcribe import transcribe_audio
 from select_clip import select_best_window
 from extract_clip import extract_clip
-from caps import json_to_srt # Assuming your SRT export script is named caps.py
-from download_youtube import download_video # New import
-from llm_keyword_suggester import get_llm_suggestions # New import
+from caps import json_to_srt 
+from download_youtube import download_video 
+from llm_keyword_suggester import get_llm_suggestions 
 
-from moviepy.editor import VideoFileClip # To get video dimensions
+from moviepy.editor import VideoFileClip 
 
 def run_pipeline(input_source, output_file, keywords, whisper_model, min_length, max_length, is_youtube_url=False):
     # Create a temporary directory for intermediate files
@@ -46,7 +46,7 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
             full_transcript_data = json.load(f)
         full_transcript_text = " ".join([seg['text'] for seg in full_transcript_data['segments']])
 
-        # Step 3: Get LLM Keyword Suggestions (New Step)
+        # Step 3: Get LLM Keyword Suggestions
         final_keywords = []
         if full_transcript_text:
             print(f"\n--- Step 3: Getting LLM keyword suggestions ---")
@@ -72,7 +72,7 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
                 if user_choice == 'y':
                     topic_selection_input = input("Enter topic numbers (e.g., 1,3), 'all', or 'none' to skip: ").lower().strip()
                     if topic_selection_input == 'all':
-                        final_keywords = list(set(all_suggested_keywords)) # Use all unique keywords
+                        final_keywords = list(set(all_suggested_keywords)) 
                         print(f"Using all suggested keywords: {', '.join(final_keywords)}")
                     elif topic_selection_input == 'none' or not topic_selection_input:
                         print(f"Skipping suggested keywords. Using default keywords for clip selection: {', '.join(keywords)}")
@@ -98,10 +98,10 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
                     print(f"Using custom keywords: {', '.join(final_keywords)}")
                 else:
                     print(f"Invalid choice. Using default keywords for clip selection: {', '.join(keywords)}")
-                    final_keywords = keywords # Fallback to CLI provided keywords
+                    final_keywords = keywords 
             else:
                 print("LLM suggestions failed or not available. Using default keywords from CLI.")
-                final_keywords = keywords # Fallback to CLI provided keywords
+                final_keywords = keywords 
         else:
             print("Transcript is empty. Using default keywords for clip selection.")
             final_keywords = keywords
@@ -109,7 +109,7 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
         # Step 4: Select Clip (using final_keywords)
         print(f"\n--- Step 4: Selecting best clip ({min_length}-{max_length}s) ---")
         
-        segments = full_transcript_data['segments'] # Re-using full_transcript_data from above
+        segments = full_transcript_data['segments'] 
         selected_clip_info = select_best_window(segments, min_length, max_length, final_keywords)
 
         if not selected_clip_info:
@@ -120,7 +120,7 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
         clip_end = selected_clip_info['end']
         print(f"Selected clip from {clip_start:.2f}s to {clip_end:.2f}s")
         
-        # Save selected clip info (optional, but good for debugging/re-running)
+        
         selected_clip_info_path = os.path.join(temp_dir, "selected_clip_info.json")
         with open(selected_clip_info_path, 'w', encoding='utf-8') as f:
             json.dump(selected_clip_info, f, indent=2)
@@ -171,7 +171,7 @@ def run_pipeline(input_source, output_file, keywords, whisper_model, min_length,
         )
 
         # Add subtitles filter (using forward slashes for path for ffmpeg compatibility)
-        # Fontsize is manually set by user to 12
+        
         subtitles_filter = (
             f"subtitles='{srt_path.replace(os.sep, '/')}':"
             f"force_style='Fontname=Arial,Fontsize=12,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2,Shadow=0'"
@@ -204,7 +204,7 @@ def main():
     input_group.add_argument('--youtube-url', help='YouTube video URL to download.')
 
     parser.add_argument('--output', required=True, help='Path for the final output short MP4 video (e.g., output/reel.mp4).')
-    # The --keywords argument will now be used as default/fallback if LLM suggestions are not chosen
+    
     parser.add_argument('--keywords', default='highlights,interesting', help='Comma-separated keywords for automatic clip selection (used as default or fallback).')
     parser.add_argument('--whisper-model', default='base', choices=['tiny', 'base', 'small'], help='Whisper model size (default: base). For CPU, base or small recommended.')
     parser.add_argument('--min-length', type=float, default=30, help='Minimum clip length in seconds (default: 30).')
