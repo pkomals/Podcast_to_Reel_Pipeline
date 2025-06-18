@@ -1,0 +1,12 @@
+moviepy==1.0.3
+openai-whisper
+textblob
+yt-dlp
+ffmpeg-python
+<<<<<<< HEAD
+pillow
+openai
+python-dotenv
+=======
+pillow
+>>>>>>> 3bc3ebd39fe125f695b83a4454177c04e7e37a59
