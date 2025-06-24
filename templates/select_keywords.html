@@ -3,22 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Select Topics & Keywords</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        .container { max-width: 700px; margin: auto; }
-        .topic { margin-bottom: 1em; padding: 1em; border: 1px solid #ccc; border-radius: 6px; }
-        .topic label { font-weight: bold; }
-        .summary { background: #f8f8f8; padding: 1em; border-radius: 6px; margin-bottom: 2em; }
-        button { margin-top: 2em; padding: 0.7em 2em; font-size: 1em; }
-        .custom-keywords { margin-top: 1em; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <h2>Select Topics & Keywords</h2>
-    <div class="summary">
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Select Topics & Keywords</h2>
+    <div class="alert alert-info mb-4">
         <strong>LLM Summary:</strong>
-        <p>{{ llm_suggestions['summary'] }}</p>
+        <p class="mb-0">{{ llm_suggestions['summary'] }}</p>
     </div>
     <form action="/finalize" method="post">
         <input type="hidden" name="input_path" value="{{ input_path }}">
@@ -26,23 +18,28 @@
         <input type="hidden" name="whisper_model" value="{{ whisper_model }}">
         <input type="hidden" name="min_length" value="{{ min_length }}">
         <input type="hidden" name="max_length" value="{{ max_length }}">
-        <div><strong>Select a topic to use for keyword selection:</strong></div>
+        <div class="mb-3"><strong>Select a topic to use for keyword selection:</strong></div>
         {% for topic in llm_suggestions['key_topics'] %}
-        <div class="topic">
-            <label>
-                <input type="radio" name="topic_idx" value="{{ loop.index0 }}" {% if loop.first %}checked{% endif %}>
-                {{ topic['theme'] }}
-            </label>
-            <div>Keywords: {{ ', '.join(topic['keywords']) }}</div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="topic_idx" id="topic{{ loop.index0 }}" value="{{ loop.index0 }}" {% if loop.first %}checked{% endif %}>
+                    <label class="form-check-label fw-bold" for="topic{{ loop.index0 }}">
+                        {{ topic['theme'] }}
+                    </label>
+                </div>
+                <div class="mt-2">Keywords: <span class="text-secondary">{{ ', '.join(topic['keywords']) }}</span></div>
+            </div>
         </div>
         {% endfor %}
-        <div class="custom-keywords">
-            <label for="custom_keywords">Or enter custom keywords (comma-separated):</label>
-            <input type="text" id="custom_keywords" name="custom_keywords" style="width:100%;" placeholder="e.g. highlight, guest, story">
-            <div style="font-size:0.9em; color:#888;">If you enter custom keywords, they will be used instead of the selected topic above.</div>
+        <div class="mb-3">
+            <label for="custom_keywords" class="form-label">Or enter custom keywords (comma-separated):</label>
+            <input type="text" id="custom_keywords" name="custom_keywords" class="form-control" placeholder="e.g. highlight, guest, story">
+            <div class="form-text">If you enter custom keywords, they will be used instead of the selected topic above.</div>
         </div>
-        <button type="submit">Generate Reel</button>
+        <button type="submit" class="btn btn-primary w-100">Generate Reel</button>
     </form>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

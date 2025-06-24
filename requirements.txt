@@ -6,7 +6,8 @@ ffmpeg-python
 pillow
 openai
 python-dotenv
-fastapi
+fastapi>=0.95,<0.110
 uvicorn
 jinja2
 python-multipart
+pydantic<2.0.0
