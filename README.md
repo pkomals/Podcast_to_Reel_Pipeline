@@ -22,15 +22,6 @@
 
 ---
 
-## 🖼️ Screenshots
-
-> _Add screenshots or GIFs here for:_
-> - Home page (YouTube URL input)
-> - LLM-powered topic/keyword selection
-> - Result/download page
-> - Example output reel (thumbnail or short video)
-
----
 
 ## ⚡ Quickstart
 
